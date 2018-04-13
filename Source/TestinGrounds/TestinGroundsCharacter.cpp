@@ -164,6 +164,8 @@ void ATestinGroundsCharacter::OnFire()
 
 				// spawn the projectile at the muzzle
 				World->SpawnActor<ATestinGroundsProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+
+				MakeNoise(1.f, this, GetActorLocation(), 0.f, FName("Fire"));
 			}
 		}
 	}
