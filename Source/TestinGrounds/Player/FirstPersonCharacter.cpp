@@ -1,6 +1,6 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
-#include "TestinGroundsCharacter.h"
+#include "FirstPersonCharacter.h"
 #include "TestinGroundsProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -15,9 +15,9 @@
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 //////////////////////////////////////////////////////////////////////////
-// ATestinGroundsCharacter
+// AFirstPersonCharacter
 
-ATestinGroundsCharacter::ATestinGroundsCharacter()
+AFirstPersonCharacter::AFirstPersonCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
@@ -84,7 +84,7 @@ ATestinGroundsCharacter::ATestinGroundsCharacter()
 	//bUsingMotionControllers = true;
 }
 
-void ATestinGroundsCharacter::BeginPlay()
+void AFirstPersonCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
@@ -108,7 +108,7 @@ void ATestinGroundsCharacter::BeginPlay()
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-void ATestinGroundsCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void AFirstPersonCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
@@ -118,27 +118,27 @@ void ATestinGroundsCharacter::SetupPlayerInputComponent(class UInputComponent* P
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATestinGroundsCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFirstPersonCharacter::OnFire);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ATestinGroundsCharacter::OnResetVR);
+	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AFirstPersonCharacter::OnResetVR);
 
 	// Bind movement events
-	PlayerInputComponent->BindAxis("MoveForward", this, &ATestinGroundsCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ATestinGroundsCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &AFirstPersonCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AFirstPersonCharacter::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &ATestinGroundsCharacter::TurnAtRate);
+	PlayerInputComponent->BindAxis("TurnRate", this, &AFirstPersonCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &ATestinGroundsCharacter::LookUpAtRate);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &AFirstPersonCharacter::LookUpAtRate);
 }
 
-void ATestinGroundsCharacter::OnFire()
+void AFirstPersonCharacter::OnFire()
 {
 	// try and fire a projectile
 	if (ProjectileClass != NULL)
@@ -188,12 +188,12 @@ void ATestinGroundsCharacter::OnFire()
 	}
 }
 
-void ATestinGroundsCharacter::OnResetVR()
+void AFirstPersonCharacter::OnResetVR()
 {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
-void ATestinGroundsCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
+void AFirstPersonCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	if (TouchItem.bIsPressed == true)
 	{
@@ -209,7 +209,7 @@ void ATestinGroundsCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, co
 	TouchItem.bMoved = false;
 }
 
-void ATestinGroundsCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
+void AFirstPersonCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	if (TouchItem.bIsPressed == false)
 	{
@@ -221,7 +221,7 @@ void ATestinGroundsCharacter::EndTouch(const ETouchIndex::Type FingerIndex, cons
 //Commenting this section out to be consistent with FPS BP template.
 //This allows the user to turn without using the right virtual joystick
 
-//void ATestinGroundsCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location)
+//void AFirstPersonCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location)
 //{
 //	if ((TouchItem.bIsPressed == true) && (TouchItem.FingerIndex == FingerIndex))
 //	{
@@ -256,7 +256,7 @@ void ATestinGroundsCharacter::EndTouch(const ETouchIndex::Type FingerIndex, cons
 //	}
 //}
 
-void ATestinGroundsCharacter::MoveForward(float Value)
+void AFirstPersonCharacter::MoveForward(float Value)
 {
 	if (Value != 0.0f)
 	{
@@ -265,7 +265,7 @@ void ATestinGroundsCharacter::MoveForward(float Value)
 	}
 }
 
-void ATestinGroundsCharacter::MoveRight(float Value)
+void AFirstPersonCharacter::MoveRight(float Value)
 {
 	if (Value != 0.0f)
 	{
@@ -274,27 +274,27 @@ void ATestinGroundsCharacter::MoveRight(float Value)
 	}
 }
 
-void ATestinGroundsCharacter::TurnAtRate(float Rate)
+void AFirstPersonCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ATestinGroundsCharacter::LookUpAtRate(float Rate)
+void AFirstPersonCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-bool ATestinGroundsCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInputComponent)
+bool AFirstPersonCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInputComponent)
 {
 	if (FPlatformMisc::SupportsTouchInput() || GetDefault<UInputSettings>()->bUseMouseForTouch)
 	{
-		PlayerInputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ATestinGroundsCharacter::BeginTouch);
-		PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &ATestinGroundsCharacter::EndTouch);
+		PlayerInputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AFirstPersonCharacter::BeginTouch);
+		PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &AFirstPersonCharacter::EndTouch);
 
 		//Commenting this out to be more consistent with FPS BP template.
-		//PlayerInputComponent->BindTouch(EInputEvent::IE_Repeat, this, &ATestinGroundsCharacter::TouchUpdate);
+		//PlayerInputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AFirstPersonCharacter::TouchUpdate);
 		return true;
 	}
 	
